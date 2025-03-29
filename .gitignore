@@ -1,0 +1,16 @@
+# Для Python/Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.db
+*.sqlite3
+
+# Для Node.js/React
+node_modules/
+dist/
+*.log
+.env
