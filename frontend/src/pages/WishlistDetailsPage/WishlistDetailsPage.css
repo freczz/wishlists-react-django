@@ -1,0 +1,45 @@
+.wishlist-detail {
+	padding: 2rem;
+}
+
+.wishlist-main-image {
+	width: 300px;
+	border-radius: 12px;
+}
+
+.product-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 1rem;
+}
+
+.product-card {
+	border: 1px solid #ccc;
+	padding: 1rem;
+	border-radius: 10px;
+}
+
+.comment-list {
+	margin-top: 1rem;
+	list-style-type: none;
+	padding: 0;
+}
+
+.add-comment-form {
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.add-comment-form textarea {
+	min-height: 60px;
+	margin-bottom: 0.5rem;
+}
+
+.favorite-button {
+	background-color: #ffca28;
+	border: none;
+	padding: 0.5rem 1rem;
+	margin: 1rem 0;
+	cursor: pointer;
+}
