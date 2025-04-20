@@ -4,7 +4,8 @@ export interface Wishlist {
 	description: string;
 	image: any;
 	comments: IWishlistComment[];
-	items: WishlistItem[];
+	items?: WishlistItem[] | any;
+	items_data?: any;
 	access_level: AccessLevel;
 }
 

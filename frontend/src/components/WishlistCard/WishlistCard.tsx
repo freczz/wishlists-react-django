@@ -10,7 +10,6 @@ interface IWishlistCardProps {
 export default function WishlistCard({ wishlist }: IWishlistCardProps) {
 	const navigate = useNavigate();
 	const { id, title, description, image, comments } = wishlist;
-	console.log('id', id);
 
 	const handleClick = () => {
 		navigate(`/wishlists/${id}`);

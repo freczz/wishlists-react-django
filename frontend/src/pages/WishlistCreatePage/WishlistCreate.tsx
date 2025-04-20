@@ -55,18 +55,14 @@ const WishlistCreate: React.FC = () => {
 			return;
 		}
 
-		const formData: Wishlist = {
-			id: uuidv4(),
-			title: title,
-			description: description,
-			access_level: access,
-			image: image,
-			items: items,
-			comments: [],
-		};
-
 		try {
-			await WishlistService.createWishlist(formData);
+			await WishlistService.createWishlist({
+				title,
+				description,
+				access_level: access,
+				image,
+				items,
+			});
 			alert('Вишлист создан!');
 			navigate('/wishlists');
 		} catch (error: any) {

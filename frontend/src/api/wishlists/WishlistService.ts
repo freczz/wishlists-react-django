@@ -12,27 +12,33 @@ class WishlistService {
 		return response.data;
 	}
 
-	async createWishlist(data: Wishlist) {
-		const formData = {
-			title: data.title,
-			description: data.description,
-			access_level: data.access_level,
-			image: data.image,
-			items: data.items,
-		};
+	async createWishlist(data: any) {
+		const formData = new FormData();
 
-		// formData.append('title', data.title);
-		// formData.append('description', data.description || '');
-		// formData.append('access_level', data.access_level || 'private');
-		// if (data.image) formData.append('image', data.image);
+		formData.append('title', data.title);
+		formData.append('description', data.description);
+		formData.append('access_level', data.access_level);
+		formData.append('image', data.image);
 
-		// if (data.items) {
-		// 	formData.append('items', JSON.stringify(data.items));
-		// }
+		const itemsClean = data.items.map((item: any, index: any) => {
+			if (item.image) {
+				formData.append(`item_images_${index}`, item.image);
+			}
+			return {
+				name: item.name,
+				description: item.description,
+				link: item.link,
+			};
+		});
+
+		formData.append('items', JSON.stringify(itemsClean));
 
 		const response = await api.post('/wishlists/create/', formData, {
-			headers: { 'Content-Type': 'multipart/form-data' },
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
 		});
+
 		return response.data;
 	}
 

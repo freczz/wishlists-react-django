@@ -17,6 +17,18 @@ api.interceptors.response.use(
 	async err => {
 		const originalRequest = err.config;
 
+		if (err.response?.status === 401 && !localStorage.getItem('refresh')) {
+			if (
+				!(
+					err.response?.data?.detail &&
+					err.response?.data?.detail ===
+						'No active account found with the given credentials'
+				)
+			) {
+				window.location.href = '/login';
+			}
+		}
+
 		if (
 			err.response?.status === 401 &&
 			!originalRequest._retry &&

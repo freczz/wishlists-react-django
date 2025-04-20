@@ -118,6 +118,8 @@ export default function WishlistPage() {
 	useEffect(() => {
 		const a = async () => {
 			const originWishlists = await WishlistService.getAllWishlists();
+			console.log('WISHLISTS', originWishlists);
+
 			setWishlists(originWishlists);
 		};
 		a();

@@ -11,7 +11,7 @@ export const useAuth = () => {
 			const decoded: any = jwtDecode(token);
 			setUser({
 				id: decoded.user_id,
-				username: decoded.username,
+				email: decoded.email,
 			});
 		}
 	}, []);

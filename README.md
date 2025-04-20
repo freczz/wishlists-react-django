@@ -21,7 +21,7 @@ app will starts at http://localhost:8000/
 
 - docker-compose down
 - docker-compose build
-- docker-compose up
+- docker-compose up -d
 
 - docker compose exec backend python manage.py createsuperuser
 

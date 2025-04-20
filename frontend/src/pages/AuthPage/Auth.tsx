@@ -2,39 +2,40 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Auth.css';
-import { login } from '../../api/auth/authService';
+import { login, register } from '../../api/auth/authService';
 
 const Auth: React.FC = () => {
 	const [isLogin, setIsLogin] = useState(true); // Состояние для переключения между входом и регистрацией
 	const [username, setUsername] = useState<string>('');
+	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const navigate = useNavigate();
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
-		await login(username, password);
-		navigate('/wishlists');
+		const result = await login(username, email, password);
+		console.log('result', result);
+
+		if (result) {
+			navigate('/wishlists');
+		}
 	};
 
 	const handleRegister = async (e: React.FormEvent) => {
 		e.preventDefault();
-		try {
-			await axios.post('http://localhost:8000/auth/register/', {
-				username,
-				password,
-			});
-			alert('Регистрация успешна');
+		const result = await register(username, email, password);
+		console.log('result', result);
+
+		if (result) {
 			setIsLogin(true);
 			await handleLogin(e);
-		} catch (error: any) {
-			console.log(error.response.data.username[0]);
-			alert(`Ошибка регистрации: ${error.response.data.username[0]}`);
 		}
 	};
 
 	const toggleForm = () => {
 		setIsLogin(!isLogin);
 		setUsername('');
+		setEmail('');
 		setPassword('');
 	};
 
@@ -44,13 +45,24 @@ const Auth: React.FC = () => {
 				<h2>{isLogin ? 'Вход' : 'Регистрация'}</h2>
 				<form onSubmit={isLogin ? handleLogin : handleRegister}>
 					<div className='auth-form-group'>
-						<label htmlFor='username'>Имя пользователя</label>
+						<label htmlFor='username'>Username</label>
 						<input
 							type='text'
 							id='username'
 							value={username}
 							onChange={e => setUsername(e.target.value)}
-							placeholder='Введите имя пользователя'
+							placeholder='Введите username'
+							required
+						/>
+					</div>
+					<div className='auth-form-group'>
+						<label htmlFor='email'>Email</label>
+						<input
+							type='text'
+							id='email'
+							value={email}
+							onChange={e => setEmail(e.target.value)}
+							placeholder='Введите email'
 							required
 						/>
 					</div>

@@ -60,24 +60,33 @@ export default function WishlistDetailsPage() {
 		<>
 			<Header />
 			<div className='wishlist-detail'>
-				<h2>{wishlist.title}</h2>
-				<img
-					src={wishlist.image}
-					alt={wishlist.title}
-					className='wishlist-main-image'
-				/>
-				<p>{wishlist.description}</p>
+				<div className='mainDetailBlock'>
+					<div className='left'>
+						<h2>{wishlist.title}</h2>
+						<img
+							src={wishlist.image}
+							alt={wishlist.title}
+							className='wishlist-main-image'
+						/>
+					</div>
+					<div className='right'>
+						<p>{wishlist.description}</p>
 
-				<button onClick={handleAddFavorite} className='favorite-button'>
-					Добавить в избранное
-				</button>
+						<button onClick={handleAddFavorite} className='favorite-button'>
+							Добавить в избранное
+						</button>
+					</div>
+				</div>
 
 				<h3>Товары:</h3>
 				<div className='product-list'>
 					{wishlist.items &&
-						wishlist.items.map(item => (
+						(wishlist.items as any).map((item: any) => (
 							<div key={item.link} className='product-card'>
-								<img src={item.image} alt={item.name} />
+								<img
+									src={`http://localhost:8000${item.image}`}
+									alt={item.name}
+								/>
 								<h4>{item.name}</h4>
 								<p>{item.description}</p>
 								<a href={item.link} target='_blank' rel='noopener noreferrer'>
