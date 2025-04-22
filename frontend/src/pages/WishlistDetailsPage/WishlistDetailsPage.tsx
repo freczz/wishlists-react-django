@@ -1,15 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import './WishlistDetailsPage.css';
 import wishlistService from '../../api/wishlists/WishlistService';
 import { Wishlist } from '../../interfaces';
 import Header from '../../components/Header/Header';
 
+// const handleAddComment = async () => {
+// 	if (!commentText.trim()) return;
+
+// 	try {
+// 		await axios.post(
+// 			`http://localhost:8000/wishlists/${id}/comments/`,
+// 			{ text: commentText },
+// 			{ headers: { Authorization: `Bearer ${token}` } }
+// 		);
+// 		setCommentText('');
+// 		// Перезагрузим комментарии
+// 		const res = await axios.get<Wishlist>(
+// 			`http://localhost:8000/api/wishlists/${id}/`,
+// 			{
+// 				headers: { Authorization: `Bearer ${token}` },
+// 			}
+// 		);
+// 		setWishlist(res.data);
+// 	} catch (error) {
+// 		console.error('Ошибка при добавлении комментария', error);
+// 	}
+// };
+
 export default function WishlistDetailsPage() {
 	const { id } = useParams();
 	const [wishlist, setWishlist] = useState<Wishlist | null>(null);
 	const [commentText, setCommentText] = useState('');
+	const [currentUser, setCurrentUser] = useState('');
 	const token = localStorage.getItem('token');
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		setCurrentUser(localStorage.getItem('user') || '');
+	}, []);
 
 	useEffect(() => {
 		const fetchWishlist = async () => {
@@ -19,40 +48,36 @@ export default function WishlistDetailsPage() {
 				console.log('res', res);
 
 				setWishlist(res);
-			} catch (error) {
+			} catch (error: any) {
 				console.error('Ошибка загрузки вишлиста', error);
+				if (error.response && error.response.status === 403) {
+					navigate('/forbidden');
+				}
 			}
 		};
 		fetchWishlist();
 	}, [id, token]);
 
+	const handleDelete = async () => {
+		if (!id) return;
+		if (window.confirm('Точно удалить вишлист?')) {
+			try {
+				await wishlistService.deleteWishlist(id);
+				navigate('/wishlists');
+			} catch (error) {
+				console.error('Ошибка при удалении вишлиста:', error);
+			}
+		}
+	};
+
+	const handleToEditPage = () => {
+		navigate(`/wishlists/${id}/edit`);
+	};
+
 	const handleAddFavorite = () => {
 		// TODO: реализовать добавление в избранное
 		alert('Добавлено в избранное!');
 	};
-
-	// const handleAddComment = async () => {
-	// 	if (!commentText.trim()) return;
-
-	// 	try {
-	// 		await axios.post(
-	// 			`http://localhost:8000/wishlists/${id}/comments/`,
-	// 			{ text: commentText },
-	// 			{ headers: { Authorization: `Bearer ${token}` } }
-	// 		);
-	// 		setCommentText('');
-	// 		// Перезагрузим комментарии
-	// 		const res = await axios.get<Wishlist>(
-	// 			`http://localhost:8000/api/wishlists/${id}/`,
-	// 			{
-	// 				headers: { Authorization: `Bearer ${token}` },
-	// 			}
-	// 		);
-	// 		setWishlist(res.data);
-	// 	} catch (error) {
-	// 		console.error('Ошибка при добавлении комментария', error);
-	// 	}
-	// };
 
 	if (!wishlist) return <p>Загрузка...</p>;
 
@@ -63,6 +88,7 @@ export default function WishlistDetailsPage() {
 				<div className='mainDetailBlock'>
 					<div className='left'>
 						<h2>{wishlist.title}</h2>
+						<h4>Автор: {wishlist.user}</h4>
 						<img
 							src={wishlist.image}
 							alt={wishlist.title}
@@ -71,10 +97,19 @@ export default function WishlistDetailsPage() {
 					</div>
 					<div className='right'>
 						<p>{wishlist.description}</p>
-
 						<button onClick={handleAddFavorite} className='favorite-button'>
 							Добавить в избранное
 						</button>
+						{wishlist.user === currentUser && (
+							<button onClick={handleToEditPage} className='edit-button'>
+								Редактировать
+							</button>
+						)}
+						{wishlist.user === currentUser && (
+							<button onClick={handleDelete} className='delete-button'>
+								Удалить
+							</button>
+						)}
 					</div>
 				</div>
 
@@ -112,11 +147,7 @@ export default function WishlistDetailsPage() {
 						onChange={e => setCommentText(e.target.value)}
 						placeholder='Напишите комментарий...'
 					/>
-					<button
-					// onClick={handleAddComment}
-					>
-						Добавить комментарий
-					</button>
+					<button>Добавить комментарий</button>
 				</div>
 			</div>
 		</>

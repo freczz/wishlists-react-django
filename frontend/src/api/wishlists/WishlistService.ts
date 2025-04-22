@@ -7,6 +7,11 @@ class WishlistService {
 		return response.data;
 	}
 
+	async getMyWishlists() {
+		const response = await api.get('/wishlists/my');
+		return response.data;
+	}
+
 	async getWishlist(id: string) {
 		const response = await api.get(`/wishlists/${id}/`);
 		return response.data;
@@ -42,19 +47,37 @@ class WishlistService {
 		return response.data;
 	}
 
-	async updateWishlist(id: number, data: Partial<Wishlist>) {
+	async updateWishlist(id: string, data: any) {
 		const formData = new FormData();
 
-		if (data.title) formData.append('title', data.title);
-		if (data.description) formData.append('description', data.description);
-		if (data.access_level) formData.append('access_level', data.access_level);
+		formData.append('title', data.title);
+		formData.append('description', data.description);
+		formData.append('access_level', data.access_level);
 		if (data.image) formData.append('image', data.image);
-		if (data.items) formData.append('items', JSON.stringify(data.items));
 
-		const response = await api.put(`/wishlists/${id}/`, formData, {
-			headers: { 'Content-Type': 'multipart/form-data' },
+		const serializedItems = data.items.map((item: any, index: any) => {
+			const { name, description, link } = item;
+			const newItem: any = { name, description, link };
+
+			if (item.image) {
+				formData.append(`item_images_${index}`, item.image);
+				newItem.image_key = `item_images_${index}`;
+			}
+
+			return newItem;
 		});
-		return response.data;
+
+		formData.append('items', JSON.stringify(serializedItems));
+
+		return api.put(`/wishlists/${id}/`, formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+		});
+	}
+
+	async deleteWishlist(id: string) {
+		return await api.delete(`/wishlists/${id}/`);
 	}
 }
 

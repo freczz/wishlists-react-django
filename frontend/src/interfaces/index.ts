@@ -7,6 +7,7 @@ export interface Wishlist {
 	items?: WishlistItem[] | any;
 	items_data?: any;
 	access_level: AccessLevel;
+	user: string;
 }
 
 export type AccessLevel = 'public' | 'private' | 'link';

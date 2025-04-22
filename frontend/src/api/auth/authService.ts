@@ -14,6 +14,7 @@ export const login = async (
 		});
 		console.log('response', response);
 
+		localStorage.setItem('user', JSON.parse(response.config.data).username);
 		localStorage.setItem('access', response.data.access);
 		localStorage.setItem('refresh', response.data.refresh);
 		return response;

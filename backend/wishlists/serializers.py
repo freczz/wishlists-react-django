@@ -19,10 +19,11 @@ class CommentSerializer(serializers.ModelSerializer):
 class WishlistSerializer(serializers.ModelSerializer):
     items = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
+    user = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:
         model = Wishlist
-        fields = ['id', 'title', 'description', 'image', 'comments', 'items', 'access_level']
+        fields = ['id', 'title', 'description', 'image', 'comments', 'items', 'access_level', 'user']
 
     def get_items(self, obj):
         return WishlistItemSerializer(obj.items.all(), many=True).data

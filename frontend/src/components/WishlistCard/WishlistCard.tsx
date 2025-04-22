@@ -9,7 +9,7 @@ interface IWishlistCardProps {
 
 export default function WishlistCard({ wishlist }: IWishlistCardProps) {
 	const navigate = useNavigate();
-	const { id, title, description, image, comments } = wishlist;
+	const { id, title, description, image, comments, user } = wishlist;
 
 	const handleClick = () => {
 		navigate(`/wishlists/${id}`);
@@ -25,6 +25,7 @@ export default function WishlistCard({ wishlist }: IWishlistCardProps) {
 			<div className='wishlist-card-content'>
 				<h3 className='wishlist-card-title'>{title}</h3>
 				<p className='wishlist-card-description'>{description}</p>
+				<p className='wishlist-card-author'>Автор: {user}</p>
 				<p className='wishlist-card-comments'>
 					Комментариев: {comments.length}
 				</p>

@@ -5,6 +5,8 @@ import WishlistCreate from './pages/WishlistCreatePage/WishlistCreate';
 import Auth from './pages/AuthPage/Auth';
 import WishlistDetailsPage from './pages/WishlistDetailsPage/WishlistDetailsPage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import ForbiddenPage from './pages/ForbiddenPage/ForbiddenPage';
+import WishlistEdit from './pages/WishlistEditPage/WishlistEdit';
 
 const App: React.FC = () => {
 	return (
@@ -35,7 +37,17 @@ const App: React.FC = () => {
 						</ProtectedRoute>
 					}
 				/>
+				<Route
+					path='/wishlists/:id/edit'
+					element={
+						<ProtectedRoute>
+							<WishlistEdit />
+						</ProtectedRoute>
+					}
+				/>
+
 				<Route path='/' element={<Auth />} />
+				<Route path='/forbidden' element={<ForbiddenPage />} />
 			</Routes>
 		</Router>
 	);
