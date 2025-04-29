@@ -4,6 +4,7 @@ import './WishlistDetailsPage.css';
 import wishlistService from '../../api/wishlists/WishlistService';
 import { Wishlist } from '../../interfaces';
 import Header from '../../components/Header/Header';
+import BackButton from '../../components/BackButton/BackButton';
 
 export default function WishlistDetailsPage() {
 	const { id } = useParams();
@@ -83,16 +84,34 @@ export default function WishlistDetailsPage() {
 		}
 	};
 
+	const handleToUserPage = (user: string) => {
+		navigate(`/user/${user}`);
+	};
+
 	if (!wishlist) return <p>Загрузка...</p>;
 
 	return (
 		<>
 			<Header />
+			<BackButton />
 			<div className='wishlist-detail'>
 				<div className='mainDetailBlock'>
 					<div className='left'>
 						<h2>{wishlist.title}</h2>
-						<h4>Автор: {wishlist.user}</h4>
+						<h4>
+							Автор:{' '}
+							<span
+								className='author-link'
+								onClick={() => handleToUserPage(wishlist.user)}
+								style={{
+									cursor: 'pointer',
+									color: 'blue',
+									textDecoration: 'underline',
+								}}
+							>
+								{wishlist.user}
+							</span>
+						</h4>
 						<img
 							src={wishlist.image}
 							alt={wishlist.title}

@@ -11,6 +11,16 @@ export interface Wishlist {
 	is_favorite: boolean;
 }
 
+export interface IFriend {
+	id: string;
+	username: string;
+}
+
+export interface IMyUserData {
+	username: string;
+	email: string;
+}
+
 export type AccessLevel = 'public' | 'private' | 'link';
 
 export interface IWishlistComment {

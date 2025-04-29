@@ -2,10 +2,26 @@ import json
 from rest_framework import viewsets, permissions, status
 from django.db.models import Q
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from .models import Wishlist, WishlistItem, Comment
 from .serializers import WishlistSerializer, CommentSerializer
 from rest_framework.exceptions import PermissionDenied
+from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
+
+User = get_user_model()
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def wishlists_by_user(request, username):
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return Response({'detail': 'User not found'}, status=404)
+
+    wishlists = Wishlist.objects.filter(user=user, access_level='public')
+    serializer = WishlistSerializer(wishlists, many=True, context={'request': request})
+    return Response(serializer.data)
 
 class WishlistViewSet(viewsets.ModelViewSet):
     queryset = Wishlist.objects.all()

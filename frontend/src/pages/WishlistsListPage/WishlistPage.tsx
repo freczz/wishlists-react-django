@@ -36,19 +36,31 @@ export default function WishlistPage() {
 		<>
 			<Header />
 			<div className='wishlist-page'>
-				<h2 className='wishlist-title'>Мои вишлисты</h2>
-				<div className='wishlist-grid'>
-					{filter(myWishlists).map(w => (
-						<WishlistCard key={w.id} wishlist={w} />
-					))}
-				</div>
+				{myWishlists.length ? (
+					<>
+						<h2 className='wishlist-title'>Мои вишлисты</h2>
+						<div className='wishlist-grid'>
+							{filter(myWishlists).map(w => (
+								<WishlistCard key={w.id} wishlist={w} />
+							))}
+						</div>
+					</>
+				) : (
+					<></>
+				)}
 
-				<h2 className='wishlist-title'>Избранные вишлисты</h2>
-				<div className='wishlist-grid'>
-					{filter(favoriteWishlists).map(w => (
-						<WishlistCard key={w.id} wishlist={w} />
-					))}
-				</div>
+				{favoriteWishlists.length ? (
+					<>
+						<h2 className='wishlist-title'>Избранные вишлисты</h2>
+						<div className='wishlist-grid'>
+							{filter(favoriteWishlists).map(w => (
+								<WishlistCard key={w.id} wishlist={w} />
+							))}
+						</div>
+					</>
+				) : (
+					<></>
+				)}
 
 				<h2 className='wishlist-title'>Все вишлисты</h2>
 				<div className='wishlist-grid'>

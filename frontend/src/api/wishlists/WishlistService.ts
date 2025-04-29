@@ -80,6 +80,11 @@ class WishlistService {
 		});
 	}
 
+	async getWishlistsByUser(username: string) {
+		const res = await api.get(`/wishlists/user/${username}/`);
+		return res.data;
+	}
+
 	async deleteWishlist(id: string) {
 		return await api.delete(`/wishlists/${id}/`);
 	}
