@@ -7,6 +7,8 @@ export const login = async (
 	password: string
 ) => {
 	try {
+		localStorage.removeItem('access');
+		localStorage.removeItem('refresh');
 		const response = await api.post<AuthTokens>('/auth/login/', {
 			username,
 			email,
@@ -30,6 +32,8 @@ export const register = async (
 	password: string
 ) => {
 	try {
+		localStorage.removeItem('access');
+		localStorage.removeItem('refresh');
 		return await api.post('/auth/register/', {
 			username,
 			email,
