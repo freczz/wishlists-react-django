@@ -7,12 +7,12 @@ class WishlistService {
 	}
 
 	async getMyWishlists() {
-		const response = await api.get('/wishlists/my');
+		const response = await api.get('/wishlists/my/');
 		return response.data;
 	}
 
 	async getFavoriteWishlists() {
-		const response = await api.get('/wishlists/favorites');
+		const response = await api.get('/wishlists/favorites/');
 		return response.data;
 	}
 

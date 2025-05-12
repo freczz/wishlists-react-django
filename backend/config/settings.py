@@ -49,6 +49,8 @@ INSTALLED_APPS = [
 	'users',
 ]
 
+APPEND_SLASH = False
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -87,6 +89,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 	"http://127.0.0.1:3000",
 ]
+
+SECURE_SSL_REDIRECT = False
 
 ROOT_URLCONF = 'config.urls'
 

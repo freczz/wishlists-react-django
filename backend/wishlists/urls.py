@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import WishlistViewSet, wishlists_by_user
 
 router = DefaultRouter()
-router.register(r'', WishlistViewSet, basename='wishlist')
+router.register(r'', WishlistViewSet, basename='wishlists')
 
 urlpatterns = [
     path('create/', WishlistViewSet.as_view({'post': 'create'}), name='wishlist-create'),
