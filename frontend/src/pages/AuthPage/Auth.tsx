@@ -13,7 +13,7 @@ const Auth: React.FC = () => {
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
-		const result = await login(username, email, password);
+		const result = await login(username, password);
 		console.log('result', result);
 
 		if (result) {
@@ -55,17 +55,22 @@ const Auth: React.FC = () => {
 							required
 						/>
 					</div>
-					<div className='auth-form-group'>
-						<label htmlFor='email'>Email</label>
-						<input
-							type='text'
-							id='email'
-							value={email}
-							onChange={e => setEmail(e.target.value)}
-							placeholder='Введите email'
-							required
-						/>
-					</div>
+					{isLogin ? (
+						<></>
+					) : (
+						<div className='auth-form-group'>
+							<label htmlFor='email'>Email</label>
+							<input
+								type='text'
+								id='email'
+								value={email}
+								onChange={e => setEmail(e.target.value)}
+								placeholder='Введите email'
+								required
+							/>
+						</div>
+					)}
+
 					<div className='auth-form-group'>
 						<label htmlFor='password'>Пароль</label>
 						<input

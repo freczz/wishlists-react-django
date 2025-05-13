@@ -9,7 +9,7 @@ interface IWishlistCardProps {
 
 export default function WishlistCard({ wishlist }: IWishlistCardProps) {
 	const navigate = useNavigate();
-	const { id, title, description, image, comments, user } = wishlist;
+	const { id, title, description, image, color, comments, user } = wishlist;
 
 	const handleClick = () => {
 		navigate(`/wishlists/${id}`);
@@ -22,6 +22,12 @@ export default function WishlistCard({ wishlist }: IWishlistCardProps) {
 			style={{ cursor: 'pointer' }}
 		>
 			{image && <img src={image} alt={title} className='wishlist-card-image' />}
+			{color && (
+				<div
+					style={{ backgroundColor: color }}
+					className='wishlist-card-image'
+				></div>
+			)}
 			<div className='wishlist-card-content'>
 				<h3 className='wishlist-card-title'>{title}</h3>
 				<p className='wishlist-card-description'>{description}</p>

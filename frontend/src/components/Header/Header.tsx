@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { searchQueryAtom } from '../../state/searchFilter';
@@ -8,23 +8,27 @@ export default function Header() {
 	const navigate = useNavigate();
 	const [showMenu, setShowMenu] = useState(false);
 	const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
+	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const handleToMain = () => {
-		navigate('/wishlists');
-	};
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				dropdownRef.current &&
+				!dropdownRef.current.contains(event.target as Node)
+			) {
+				setShowMenu(false);
+			}
+		};
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 
-	const handleAddGift = () => {
-		navigate('/wishlist-create');
-	};
-
-	const handleToFriends = () => {
-		navigate('/friends');
-	};
-
-	const handleToProfile = () => {
-		navigate('/profile');
-	};
-
+	const handleToMain = () => navigate('/wishlists');
+	const handleAddGift = () => navigate('/wishlist-create');
+	const handleToFriends = () => navigate('/friends');
+	const handleToProfile = () => navigate('/profile');
 	const handleLogout = () => {
 		localStorage.clear();
 		navigate('/login');
@@ -56,8 +60,13 @@ export default function Header() {
 					value={searchQuery}
 					onChange={e => setSearchQuery(e.target.value)}
 				/>
-				<div className='profile-icon' onClick={() => setShowMenu(!showMenu)}>
-					<span className='header-icon'>👤</span>
+				<div className='profile-icon' ref={dropdownRef}>
+					<span
+						className='header-icon'
+						onClick={() => setShowMenu(prev => !prev)}
+					>
+						👤
+					</span>
 					{showMenu && (
 						<div className='dropdown-menu'>
 							<button onClick={handleToProfile}>Профиль</button>

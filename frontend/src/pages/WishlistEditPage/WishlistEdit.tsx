@@ -24,6 +24,8 @@ const WishlistEdit: React.FC = () => {
 			previewImage?: string;
 		}[]
 	>([]);
+	const [useColorInsteadOfImage, setUseColorInsteadOfImage] = useState(false);
+	const [color, setColor] = useState('#ffffff');
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -96,7 +98,8 @@ const WishlistEdit: React.FC = () => {
 				title,
 				description,
 				access_level: access,
-				image,
+				image: useColorInsteadOfImage ? null : image,
+				color: useColorInsteadOfImage ? color : null,
 				items,
 			});
 			alert('Вишлист обновлён!');
@@ -113,51 +116,94 @@ const WishlistEdit: React.FC = () => {
 			<div className='wishlist-create-container'>
 				<div className='wishlist-create-block'>
 					<h2>Редактировать вишлист</h2>
-					<form onSubmit={handleSubmit}>
-						<div className='form-group'>
-							<label htmlFor='title'>Название</label>
-							<input
-								type='text'
-								id='title'
-								value={title}
-								onChange={e => setTitle(e.target.value)}
-								required
-							/>
-						</div>
-						<div className='form-group'>
-							<label htmlFor='description'>Описание</label>
-							<textarea
-								id='description'
-								value={description}
-								onChange={e => setDescription(e.target.value)}
-								required
-							/>
-						</div>
-						<div className='form-group'>
-							<label htmlFor='access'>Доступ</label>
-							<select
-								id='access'
-								value={access}
-								onChange={e => setAccess(e.target.value as AccessLevel)}
-							>
-								<option value='public'>Публичный</option>
-								<option value='private'>Приватный</option>
-								<option value='link'>По ссылке</option>
-							</select>
-						</div>
-						<div className='form-group'>
-							<label htmlFor='image'>Изображение</label>
-							<input
-								type='file'
-								id='image'
-								accept='image/*'
-								onChange={handleImageChange}
-							/>
-						</div>
+					<form className='edit-form' onSubmit={handleSubmit}>
+						<div className='form-row'>
+							<div className='form-column'>
+								<div className='form-group'>
+									<label htmlFor='title'>Название</label>
+									<input
+										type='text'
+										id='title'
+										value={title}
+										onChange={e => setTitle(e.target.value)}
+										required
+									/>
+								</div>
+								<div className='form-group'>
+									<label htmlFor='description'>Описание</label>
+									<textarea
+										id='description'
+										value={description}
+										onChange={e => setDescription(e.target.value)}
+										required
+									/>
+								</div>
+								<div className='form-group'>
+									<label htmlFor='access'>Доступ</label>
+									<select
+										id='access'
+										value={access}
+										onChange={e => setAccess(e.target.value as AccessLevel)}
+									>
+										<option value='public'>Публичный</option>
+										<option value='private'>Приватный</option>
+										<option value='link'>По ссылке</option>
+									</select>
+								</div>
+							</div>
+							<div className='form-column'>
+								<div className='form-group'>
+									<label>
+										<input
+											type='checkbox'
+											checked={useColorInsteadOfImage}
+											onChange={e =>
+												setUseColorInsteadOfImage(e.target.checked)
+											}
+										/>
+										Использовать цвет вместо изображения
+									</label>
+								</div>
 
-						{previewImage && (
-							<img src={previewImage} alt='Превью' className='image-preview' />
-						)}
+								{useColorInsteadOfImage ? (
+									<div className='form-group'>
+										<label htmlFor='color'>Выбери цвет</label>
+										<select
+											id='color'
+											value={color}
+											onChange={e => setColor(e.target.value)}
+										>
+											<option value='#ffffff'>Белый</option>
+											<option value='#FF8282'>Красный</option>
+											<option value='#82FF8F'>Зелёный</option>
+											<option value='#8299FF'>Синий</option>
+											<option value='#FFD182'>Оранжевый</option>
+											<option value='#B482FF'>Фиолетовый</option>
+										</select>
+									</div>
+								) : (
+									<div className='form-group'>
+										<label htmlFor='image'>Изображение</label>
+										<input
+											type='file'
+											id='image'
+											accept='image/*'
+											onChange={handleImageChange}
+											className='image-input'
+										/>
+										{previewImage && (
+											<div className='image-create-preview'>
+												<img
+													src={previewImage}
+													alt='Превью'
+													className='image-preview'
+												/>
+											</div>
+										)}
+									</div>
+								)}
+							</div>
+						</div>
 
 						<h3>Товары</h3>
 						{items.map((item, index) => (

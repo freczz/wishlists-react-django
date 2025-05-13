@@ -15,7 +15,9 @@ const WishlistCreate: React.FC = () => {
 	const [access, setAccess] = useState<AccessLevel>('public');
 	const [items, setItems] = useState<
 		{ name: string; description: string; link: string; image: File | null }[]
-	>([{ name: '', description: '', link: '', image: null }]);
+	>([]);
+	const [useColorInsteadOfImage, setUseColorInsteadOfImage] = useState(false);
+	const [color, setColor] = useState('#ffffff');
 	const token = localStorage.getItem('access');
 	const navigate = useNavigate();
 
@@ -51,17 +53,15 @@ const WishlistCreate: React.FC = () => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!image) {
-			alert('Пожалуйста, выберите изображение');
-			return;
-		}
+		console.log('file', image);
 
 		try {
 			await WishlistService.createWishlist({
 				title,
 				description,
 				access_level: access,
-				image,
+				image: useColorInsteadOfImage ? null : image,
+				color: useColorInsteadOfImage ? color : null,
 				items,
 			});
 			alert('Вишлист создан!');
@@ -89,88 +89,143 @@ const WishlistCreate: React.FC = () => {
 			<div className='wishlist-create-container'>
 				<div className='wishlist-create-block'>
 					<h2>Создать вишлист</h2>
-					<form onSubmit={handleSubmit}>
-						<div className='form-group'>
-							<label htmlFor='title'>Название</label>
-							<input
-								type='text'
-								id='title'
-								value={title}
-								onChange={e => setTitle(e.target.value)}
-								required
-							/>
-						</div>
-						<div className='form-group'>
-							<label htmlFor='description'>Описание</label>
-							<textarea
-								id='description'
-								value={description}
-								onChange={e => setDescription(e.target.value)}
-								required
-							/>
-						</div>
-						<div className='form-group'>
-							<label htmlFor='access'>Доступ</label>
-							<select
-								id='access'
-								value={access}
-								onChange={e => setAccess(e.target.value as AccessLevel)}
-							>
-								<option value='public'>Публичный</option>
-								<option value='private'>Приватный</option>
-								<option value='link'>По ссылке</option>
-							</select>
-						</div>
-						<div className='form-group'>
-							<label htmlFor='image'>Изображение</label>
-							<input
-								type='file'
-								id='image'
-								accept='image/*'
-								onChange={handleImageChange}
-								required
-							/>
-						</div>
+					<form className='create-form' onSubmit={handleSubmit}>
+						<div className='form-row'>
+							<div className='form-column'>
+								<div className='form-group'>
+									<label htmlFor='title'>Название</label>
+									<input
+										type='text'
+										id='title'
+										value={title}
+										onChange={e => setTitle(e.target.value)}
+										required
+									/>
+								</div>
+								<div className='form-group'>
+									<label htmlFor='description'>Описание</label>
+									<textarea
+										id='description'
+										value={description}
+										onChange={e => setDescription(e.target.value)}
+										required
+									/>
+								</div>
+								<div className='form-group'>
+									<label htmlFor='access'>Доступ</label>
+									<select
+										id='access'
+										value={access}
+										onChange={e => setAccess(e.target.value as AccessLevel)}
+									>
+										<option value='public'>Публичный</option>
+										<option value='private'>Приватный</option>
+										<option value='link'>По ссылке</option>
+									</select>
+								</div>
+							</div>
+							<div className='form-column'>
+								<div className='form-group'>
+									<label>
+										<input
+											type='checkbox'
+											checked={useColorInsteadOfImage}
+											onChange={e =>
+												setUseColorInsteadOfImage(e.target.checked)
+											}
+										/>
+										Использовать цвет вместо изображения
+									</label>
+								</div>
 
-						{image && (
-							<img
-								src={URL.createObjectURL(image)}
-								alt='Превью'
-								className='image-preview'
-							/>
-						)}
+								{useColorInsteadOfImage ? (
+									<div className='form-group'>
+										<label htmlFor='color'>Выбери цвет</label>
+										<select
+											id='color'
+											value={color}
+											onChange={e => setColor(e.target.value)}
+										>
+											<option value='#ffffff'>Белый</option>
+											<option value='#FF8282'>Красный</option>
+											<option value='#82FF8F'>Зелёный</option>
+											<option value='#8299FF'>Синий</option>
+											<option value='#FFD182'>Оранжевый</option>
+											<option value='#B482FF'>Фиолетовый</option>
+										</select>
+									</div>
+								) : (
+									<div className='form-group'>
+										<label htmlFor='image'>Изображение</label>
+										<input
+											type='file'
+											id='image'
+											accept='image/*'
+											onChange={handleImageChange}
+											className='image-input'
+										/>
+										{image && (
+											<div className='image-create-preview'>
+												<img
+													src={URL.createObjectURL(image)}
+													alt='Превью'
+													className='image-preview'
+												/>
+											</div>
+										)}
+									</div>
+								)}
+							</div>
+						</div>
 
 						{/* Список товаров */}
 						<h3>Товары</h3>
 						{items.map((item, index) => (
-							<div key={index} className='item-block'>
-								<input
-									type='text'
-									placeholder='Название товара'
-									value={item.name}
-									onChange={e =>
-										handleItemChange(index, 'name', e.target.value)
-									}
-									required
-								/>
-								<input
-									type='text'
-									placeholder='Описание товара'
-									value={item.description}
-									onChange={e =>
-										handleItemChange(index, 'description', e.target.value)
-									}
-									required
-								/>
-								<input
-									type='url'
-									placeholder='Ссылка на магазин'
-									value={item.link}
-									onChange={e =>
-										handleItemChange(index, 'link', e.target.value)
-									}
-									required
-								/>
+							<div key={index} className='create-item-block'>
+								<div className='form-row'>
+									<div className='form-column'>
+										<div className='form-group'>
+											<label htmlFor='title'>Название товара</label>
+											<input
+												type='text'
+												placeholder='Название товара'
+												value={item.name}
+												onChange={e =>
+													handleItemChange(index, 'name', e.target.value)
+												}
+												required
+											/>
+										</div>
+
+										<div className='form-group'>
+											<label htmlFor='title'>Ссылка на магазин</label>
+											<input
+												type='url'
+												placeholder='Ссылка на магазин'
+												value={item.link}
+												onChange={e =>
+													handleItemChange(index, 'link', e.target.value)
+												}
+												required
+											/>
+										</div>
+										<div className='form-group'></div>
+									</div>
+									<div className='form-column'>
+										<div className='form-group'>
+											<label htmlFor='title'>Описание товара</label>
+											<textarea
+												id='description'
+												placeholder='Описание товара'
+												value={item.description}
+												onChange={e =>
+													handleItemChange(index, 'description', e.target.value)
+												}
+												required
+											/>
+										</div>
+									</div>
+								</div>
 								<div className='item-image-wrapper'>
 									{item.image ? (
 										<img

@@ -25,8 +25,8 @@ app will starts at http://localhost:8000/
 
 - docker compose exec backend python manage.py createsuperuser
 
-- docker compose exec backend python manage.py makemigrations
-- docker compose exec backend python manage.py migrate
+- docker-compose exec backend python manage.py makemigrations
+- docker-compose exec backend python manage.py migrate
 
 python manage.py createsuperuser
 

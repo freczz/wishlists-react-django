@@ -85,7 +85,14 @@ export default function WishlistDetailsPage() {
 	};
 
 	const handleToUserPage = (user: string) => {
-		navigate(`/user/${user}`);
+		const myUser = localStorage.getItem('user');
+		console.log('myUser', myUser);
+		
+		if (myUser === user) {
+			navigate('/profile');
+		} else {
+			navigate(`/user/${user}`);
+		}
 	};
 
 	if (!wishlist) return <p>Загрузка...</p>;

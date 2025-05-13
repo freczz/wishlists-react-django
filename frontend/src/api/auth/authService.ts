@@ -1,17 +1,12 @@
 import api from '../api';
 import { AuthTokens } from './types';
 
-export const login = async (
-	username: string,
-	email: string,
-	password: string
-) => {
+export const login = async (username: string, password: string) => {
 	try {
 		localStorage.removeItem('access');
 		localStorage.removeItem('refresh');
 		const response = await api.post<AuthTokens>('/auth/login/', {
 			username,
-			email,
 			password,
 		});
 		localStorage.setItem('user', JSON.parse(response.config.data).username);
@@ -68,15 +63,14 @@ export const changePassword = async (
 	newPassword: string
 ) => {
 	try {
-		return await api.post('/auth/change-password/', {
-			body: JSON.stringify({
-				old_password: oldPassword,
-				new_password: newPassword,
-			}),
+		const response = await api.post('/auth/change-password/', {
+			old_password: oldPassword,
+			new_password: newPassword,
 		});
-	} catch (error) {
-		console.log('error', error);
-		alert(error);
+		return response;
+	} catch (error: any) {
+		console.log('error', error.response?.data);
+		throw error;
 	}
 };
 

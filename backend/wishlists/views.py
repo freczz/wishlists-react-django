@@ -64,6 +64,7 @@ class WishlistViewSet(viewsets.ModelViewSet):
         wishlist.title = request.data.get('title', wishlist.title)
         wishlist.description = request.data.get('description', wishlist.description)
         wishlist.access_level = request.data.get('access_level', wishlist.access_level)
+        wishlist.color = request.data.get('color', wishlist.color)
 
         if request.FILES.get('image'):
             wishlist.image = request.FILES.get('image')
@@ -97,7 +98,8 @@ class WishlistViewSet(viewsets.ModelViewSet):
                     name=item.get('name'),
                     description=item.get('description'),
                     link=item.get('link'),
-                    image=image_file
+                    image=image_file,
+                    color=item.get('color')
                 )
 
         serializer = self.get_serializer(wishlist)

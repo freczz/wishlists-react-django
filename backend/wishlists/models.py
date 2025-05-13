@@ -13,6 +13,7 @@ class Wishlist(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='wishlist_images/', blank=True, null=True)
+    color = models.CharField(max_length=20, blank=True, null=True)
     access_level = models.CharField(max_length=10, choices=ACCESS_LEVEL_CHOICES, default='private')
     favorites = models.ManyToManyField(User, related_name='favorite_wishlists', blank=True)
 
@@ -26,6 +27,7 @@ class WishlistItem(models.Model):
     description = models.TextField(blank=True)
     link = models.URLField()
     image = models.ImageField(upload_to='wishlist_items_images/', blank=True, null=True)
+    color = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return self.name

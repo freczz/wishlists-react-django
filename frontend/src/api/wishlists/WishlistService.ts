@@ -27,7 +27,16 @@ class WishlistService {
 		formData.append('title', data.title);
 		formData.append('description', data.description);
 		formData.append('access_level', data.access_level);
-		formData.append('image', data.image);
+
+		console.log('data', data.color);
+
+		if (data.image) {
+			formData.append('image', data.image);
+		}
+
+		if (data.color) {
+			formData.append('color', data.color);
+		}
 
 		const itemsClean = data.items.map((item: any, index: any) => {
 			if (item.image) {

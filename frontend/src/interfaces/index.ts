@@ -2,7 +2,8 @@ export interface Wishlist {
 	id: string;
 	title: string;
 	description: string;
-	image: any;
+	image?: any;
+	color?: any;
 	comments: IWishlistComment[];
 	items?: WishlistItem[] | any;
 	items_data?: any;

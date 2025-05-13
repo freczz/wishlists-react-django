@@ -26,17 +26,19 @@ export default function MyProfilePage() {
 	const handleChangePassword = async () => {
 		console.log('oldPassword:', oldPassword, 'newPassword:', newPassword);
 
-		const res = await changePassword(oldPassword, newPassword);
-		console.log('res', res);
-		if (res) {
-			// const data = await res.json();
-			// if (res.ok) {
-			// 	setMessage('Пароль успешно изменён');
-			// 	setOldPassword('');
-			// 	setNewPassword('');
-			// } else {
-			// 	setMessage(data.error || 'Ошибка');
-			// }
+		try {
+			const res = await changePassword(oldPassword, newPassword);
+			if (res.status === 200) {
+				setMessage('Пароль успешно изменён');
+				setOldPassword('');
+				setNewPassword('');
+			}
+		} catch (error: any) {
+			const errorMessage =
+				error.response?.data?.error ||
+				Object.values(error.response?.data || {})[0] ||
+				'Ошибка при смене пароля';
+			setMessage(errorMessage);
 		}
 	};
 

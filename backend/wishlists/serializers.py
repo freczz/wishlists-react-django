@@ -5,7 +5,7 @@ from .models import Wishlist, WishlistItem, Comment
 class WishlistItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = WishlistItem
-        fields = ['id', 'name', 'description', 'link', 'image']
+        fields = ['id', 'name', 'description', 'link', 'image', 'color']
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -24,7 +24,7 @@ class WishlistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Wishlist
-        fields = ['id', 'title', 'description', 'image', 'comments', 'items', 'access_level', 'user', 'is_favorite']
+        fields = ['id', 'title', 'description', 'image', 'color', 'comments', 'items', 'access_level', 'user', 'is_favorite']
 
     def get_items(self, obj):
         return WishlistItemSerializer(obj.items.all(), many=True).data
@@ -61,7 +61,8 @@ class WishlistSerializer(serializers.ModelSerializer):
                     name=item.get('name', ''),
                     description=item.get('description', ''),
                     link=item.get('link', ''),
-                    image=image
+                    image=image,
+                    color=item.get('color')
                 )
 
             return wishlist
